@@ -11,10 +11,7 @@ describe('05-regex-tasks', () => {
       '{21EC2020-3AEA-4069-A2DD-08002B30309D}',
       '{0c74f13f-fa83-4c48-9b33-68921dd72463}',
     ].forEach((str) => {
-      assert(
-        result.test(str),
-        `regex does not match '${str}'`,
-      );
+      assert(result.test(str), `regex does not match '${str}'`);
     });
 
     [
@@ -25,72 +22,61 @@ describe('05-regex-tasks', () => {
       '0c74f13f-fa83-4c48-9b33-68921dd72463',
       'The roof, the roof, the roof is on fire',
     ].forEach((str) => {
-      assert(
-        result.test(str) === false,
-        `regex matches '${str}'`,
-      );
+      assert(result.test(str) === false, `regex matches '${str}'`);
     });
   });
 
+  it.optional(
+    'getRegexForPitSpot should be implemeted according to task',
+    () => {
+      const result = tasks.getRegexForPitSpot();
 
-  it.optional('getRegexForPitSpot should be implemeted according to task', () => {
-    const result = tasks.getRegexForPitSpot();
+      ['pit', 'spot', 'spate', 'slap two', 'respite'].forEach((str) => {
+        assert(result.test(str), `regex does not match '${str}'`);
+      });
 
-    ['pit', 'spot', 'spate', 'slap two', 'respite'].forEach((str) => {
+      [' pt', 'Pot', 'peat', 'part'].forEach((str) => {
+        assert(result.test(str) === false, `regex matches '${str}'`);
+      });
+
       assert(
-        result.test(str),
-        `regex does not match '${str}'`,
+        result.source.length < 13,
+        `regexp length should be < 13, actual ${result.source.length} `,
       );
-    });
+    },
+  );
 
-    [' pt', 'Pot', 'peat', 'part'].forEach((str) => {
+  it.optional(
+    'getPasswordValidator should return the password validator',
+    () => {
+      const result = tasks.getPasswordValidator(6);
+
+      [
+        'password',
+        'PASSWORD',
+        'pa55word',
+        'PASSW0RD',
+        'Pa55',
+        'Pa__W0rd',
+        '   PassW0rd    ',
+      ].forEach((str) => {
+        assert(!result.test(str), `Regex matches '${str}'`);
+      });
+
+      [
+        'PA55word',
+        'passW0rd',
+        'pa55W0rd',
+        'pa55wordPASSW0RD',
+        'a1A2b3B4',
+      ].forEach((str) => {
+        assert(result.test(str), `Regex does not match '${str}'`);
+      });
+
       assert(
-        result.test(str) === false,
-        `regex matches '${str}'`,
+        !'abcdABCD1234'.match(tasks.getPasswordValidator(20)),
+        'Password validator do not validate minLength restriction',
       );
-    });
-
-    assert(
-      result.source.length < 13,
-      `regexp length should be < 13, actual ${result.source.length} `,
-    );
-  });
-
-
-  it.optional('getPasswordValidator should return the password validator', () => {
-    const result = tasks.getPasswordValidator(6);
-
-    [
-      'password',
-      'PASSWORD',
-      'pa55word',
-      'PASSW0RD',
-      'Pa55',
-      'Pa__W0rd',
-      '   PassW0rd    ',
-    ].forEach((str) => {
-      assert(
-        !result.test(str),
-        `Regex matches '${str}'`,
-      );
-    });
-
-    [
-      'PA55word',
-      'passW0rd',
-      'pa55W0rd',
-      'pa55wordPASSW0RD',
-      'a1A2b3B4',
-    ].forEach((str) => {
-      assert(
-        result.test(str),
-        `Regex does not match '${str}'`,
-      );
-    });
-
-    assert(
-      !'abcdABCD1234'.match(tasks.getPasswordValidator(20)),
-      'Password validator do not validate minLength restriction',
-    );
-  });
+    },
+  );
 });
