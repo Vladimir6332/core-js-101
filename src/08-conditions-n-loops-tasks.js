@@ -121,8 +121,21 @@ function isTriangle(a, b, c) {
  *   { top:20, left:20, width: 20, height: 20 }    =>  false
  *
  */
-function doRectanglesOverlap(/* rect1, rect2 */) {
-  throw new Error('Not implemented');
+function doRectanglesOverlap(rect1, rect2) {
+  let a = rect1;
+  let b = rect2;
+  if (a.top <= b.top) {
+    a = rect2;
+    b = rect1;
+  }
+  if (
+    a.top > b.top + b.height
+    || a.left > b.left + b.width
+    || a.left + a.width < b.left
+  ) {
+    return false;
+  }
+  return true;
 }
 
 /**
@@ -270,28 +283,18 @@ function reverseInteger(num) {
  *   4916123456789012 => false
  */
 function isCreditCardNumber(ccn) {
-  let value = String(ccn);
-  if (/[^0-9-\s]+/.test(value)) return false;
+  const sum = reverseInteger(ccn)
+    .split('')
+    .reduce((acc, val, index) => {
+      let acct = acc;
+      if (index % 2) {
+        if (val * 2 > 9) acct += +val * 2 - 9;
+        else acct += +val * 2;
+      } else acct += +val;
+      return acct;
+    }, 0);
 
-  let nCheck = 0;
-  let nDigit = 0;
-  let bEven = false;
-  value = value.replace(/\D/g, '');
-
-  for (let n = value.length - 1; n >= 0; n -= 1) {
-    const cDigit = value.charAt(n);
-    nDigit = parseInt(cDigit, 10);
-
-    if (bEven) {
-      nDigit *= 2;
-      if (nDigit > 9) nDigit -= 9;
-    }
-
-    nCheck += nDigit;
-    bEven = !bEven;
-  }
-
-  return nCheck % 10 === 0;
+  return sum % 10 === 0;
 }
 
 /**
@@ -339,60 +342,61 @@ function getDigitalRoot(num) {
  *   '{)' = false
  *   '{[(<{[]}>)]}' = true
  */
-function isBracketsBalanced(str) {
-  const difBrackets = {};
-  const sameBrackets = {};
-  const strArr = str.split('');
-  let startIndex;
-  let simpleBrackets = [];
-  const bracketsConfig = [
-    ['[', ']'],
-    ['(', ')'],
-    ['{', '}'],
-    ['<', '>'],
-  ];
+function isBracketsBalanced(/* str */) {
+  // const difBrackets = {};
+  // const sameBrackets = {};
+  // const strArr = str.split('');
+  // let startIndex;
+  // let simpleBrackets = [];
+  // const bracketsConfig = [
+  //   ['[', ']'],
+  //   ['(', ')'],
+  //   ['{', '}'],
+  //   ['<', '>'],
+  // ];
 
-  // create configs different and same brackets
-  bracketsConfig.forEach((val) => {
-    if (val[0] === val[1]) {
-      const temp = val[0];
-      sameBrackets[val[0]] = temp;
-    } else {
-      const temp = val[1];
-      difBrackets[val[1]] = temp;
-    }
-  });
+  // // create configs different and same brackets
+  // bracketsConfig.forEach((val) => {
+  //   if (val[0] === val[1]) {
+  //     const temp = val[0];
+  //     sameBrackets[val[0]] = temp;
+  //   } else {
+  //     const temp = val[1];
+  //     difBrackets[val[1]] = temp;
+  //   }
+  // });
 
-  // check simple brackets
-  const checkSimpleBrackets = function ch(arr) {
-    if (arr.length === 0) return true;
-    if (arr.length === 1) return false;
-    for (let i = 0; i < arr.length; i += 1) {
-      if (sameBrackets[arr[i]] && arr[i] === arr[i + 1]) {
-        arr.splice(i, 2);
-        if (i === 0) i = -1;
-        else i -= 2;
-      }
-    }
-    if (arr.length === 0) return true;
-    return false;
-  };
+  // // check simple brackets
+  // const checkSimpleBrackets = function ch(arr) {
+  //   if (arr.length === 0) return true;
+  //   if (arr.length === 1) return false;
+  //   for (let i = 0; i < arr.length; i += 1) {
+  //     if (sameBrackets[arr[i]] && arr[i] === arr[i + 1]) {
+  //       arr.splice(i, 2);
+  //       if (i === 0) i = -1;
+  //       else i -= 2;
+  //     }
+  //   }
+  //   if (arr.length === 0) return true;
+  //   return false;
+  // };
 
-  // check different brackets
-  for (let i = 0; i < strArr.length; i += 1) {
-    if (difBrackets[strArr[i]]) {
-      startIndex = strArr.lastIndexOf(difBrackets[strArr[i]], i);
-      if (startIndex < 0) return false;
-      simpleBrackets = strArr
-        .splice(startIndex, i - startIndex + 1)
-        .slice(1, -1);
-      if (!checkSimpleBrackets(simpleBrackets)) return false;
-      i = startIndex - 1;
-    }
-  }
+  // // check different brackets
+  // for (let i = 0; i < strArr.length; i += 1) {
+  //   if (difBrackets[strArr[i]]) {
+  //     startIndex = strArr.lastIndexOf(difBrackets[strArr[i]], i);
+  //     if (startIndex < 0) return false;
+  //     simpleBrackets = strArr
+  //       .splice(startIndex, i - startIndex + 1)
+  //       .slice(1, -1);
+  //     if (!checkSimpleBrackets(simpleBrackets)) return false;
+  //     i = startIndex - 1;
+  //   }
+  // }
 
-  if (checkSimpleBrackets(strArr)) return true;
-  return false;
+  // if (checkSimpleBrackets(strArr)) return true;
+  // return false;
+  throw new Error('Not implemented');
 }
 
 /**
@@ -431,8 +435,32 @@ function toNaryString(num, n) {
  *   ['/web/assets/style.css', '/.bin/mocha',  '/read.me'] => '/'
  *   ['/web/favicon.ico', '/web-scripts/dump', '/webalizer/logs'] => '/'
  */
-function getCommonDirectoryPath(/* pathes */) {
-  throw new Error('Not implemented');
+function getCommonDirectoryPath(pathes) {
+  let out = '';
+  let check;
+  const p = pathes;
+
+  for (let i = 0; i < p[0].length; i += 1) {
+    const cur = p[0].slice(0, i + 1);
+    check = p.reduce((acc, val) => {
+      let acct = acc;
+      if (val.startsWith(cur)) acct += 1;
+      return acct;
+    }, 0);
+    if (check === p.length) out = cur;
+    else {
+      const rev = out.split('').reverse();
+      const index = rev.indexOf('/');
+      if (index > -1) {
+        return rev
+          .slice(index, rev.length)
+          .reverse()
+          .join('');
+      }
+      return '';
+    }
+  }
+  return out;
 }
 
 /**
@@ -453,8 +481,32 @@ function getCommonDirectoryPath(/* pathes */) {
  *                         [ 6 ]]
  *
  */
-function getMatrixProduct(/* m1, m2 */) {
-  throw new Error('Not implemented');
+function getMatrixProduct(m1, m2) {
+  const res = new Array(m1.length);
+  let sum;
+  function add(linem1, linem2) {
+    sum = 0;
+    for (let i = 0; i < linem1.length; i += 1) {
+      sum += linem1[i] * linem2[i];
+    }
+    return sum;
+  }
+  for (let i = 0; i < res.length; i += 1) {
+    res[i] = new Array(m2[0].length);
+  }
+
+  let line;
+  for (let i = 0; i < m1.length; i += 1) {
+    for (let j = 0; j < m2[0].length; j += 1) {
+      line = m2.reduce((acc, val) => {
+        acc.push(val[j]);
+        return acc;
+      }, []);
+      res[i][j] = add(m1[i], line);
+    }
+  }
+
+  return res;
 }
 
 /**
@@ -487,8 +539,40 @@ function getMatrixProduct(/* m1, m2 */) {
  *    [    ,   ,    ]]
  *
  */
-function evaluateTicTacToePosition(/* position */) {
-  throw new Error('Not implemented');
+function evaluateTicTacToePosition(position) {
+  let res;
+  let line;
+  function check(lines) {
+    if (lines[0] === lines[1] && lines[1] === lines[2]) return lines[0];
+    return false;
+  }
+  for (let i = 0; i < position.length; i += 1) {
+    if (check(position[i]) === 'X' || check(position[i]) === '0') {
+      return check(position[i]);
+    }
+  }
+
+  for (let j = 0; j < position.length; j += 1) {
+    line = [];
+    for (let i = 0; i < position.length; i += 1) {
+      line.push(position[i][j]);
+    }
+    if (line.every((val) => val === '0')) res = '0';
+    if (line.every((val) => val === 'X')) res = 'X';
+  }
+  line = [];
+  for (let i = 0; i < position.length; i += 1) {
+    line.push(position[i][i]);
+  }
+  if (line.every((val) => val === '0')) res = '0';
+  if (line.every((val) => val === 'X')) res = 'X';
+  line = [];
+  for (let i = 0; i < position.length; i += 1) {
+    line.push(position[position.length - 1 - i][i]);
+  }
+  if (line.every((val) => val === '0')) res = '0';
+  if (line.every((val) => val === 'X')) res = 'X';
+  return res;
 }
 
 module.exports = {
