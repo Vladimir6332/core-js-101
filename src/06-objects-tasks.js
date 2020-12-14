@@ -115,32 +115,141 @@ function fromJSON(proto, json) {
  */
 
 const cssSelectorBuilder = {
-  element(/* value */) {
-    throw new Error('Not implemented');
+  selector: {
+    element: '',
+    classList: [],
+    id: '',
+    attrList: [],
+    pseudoElement: '',
+    pseudoClassList: [],
   },
 
-  id(/* value */) {
-    throw new Error('Not implemented');
+  errors: {
+    uniqueElementsError:
+      'Element, id and pseudo-element should not occur more then one time inside the selector',
+    orderSettingElementsError:
+      'Selector parts should be arranged in the following order: element, id, class, attribute, pseudo-class, pseudo-element',
   },
 
-  class(/* value */) {
-    throw new Error('Not implemented');
+  combinedSelectorStr: '',
+
+  element(value) {
+    const newSelectorBuilder = { ...this };
+    newSelectorBuilder.selector = JSON.parse(JSON.stringify(this.selector));
+
+    if (newSelectorBuilder.selector.element) {
+      throw newSelectorBuilder.errors.uniqueElementsError;
+    }
+    if (
+      newSelectorBuilder.selector.id
+      || newSelectorBuilder.selector.classList.length > 0
+      || newSelectorBuilder.selector.attrList.length > 0
+      || newSelectorBuilder.selector.pseudoClassList.length > 0
+      || newSelectorBuilder.selector.pseudoElement
+    ) {
+      throw newSelectorBuilder.errors.orderSettingElementsError;
+    }
+    newSelectorBuilder.selector.element = value;
+    return newSelectorBuilder;
   },
 
-  attr(/* value */) {
-    throw new Error('Not implemented');
+  id(value) {
+    const newSelectorBuilder = { ...this };
+    newSelectorBuilder.selector = JSON.parse(JSON.stringify(this.selector));
+    const errorMessage = 'Element, id and pseudo-element should not occur more then one time inside the selector';
+    if (newSelectorBuilder.selector.id) {
+      throw errorMessage;
+    }
+    if (
+      newSelectorBuilder.selector.classList.length > 0
+      || newSelectorBuilder.selector.attrList.length > 0
+      || newSelectorBuilder.selector.pseudoClassList.length > 0
+      || newSelectorBuilder.selector.pseudoElement
+    ) {
+      throw newSelectorBuilder.errors.orderSettingElementsError;
+    }
+    newSelectorBuilder.selector.id = value;
+    return newSelectorBuilder;
   },
 
-  pseudoClass(/* value */) {
-    throw new Error('Not implemented');
+  class(value) {
+    const newSelectorBuilder = { ...this };
+    newSelectorBuilder.selector = JSON.parse(JSON.stringify(this.selector));
+    if (
+      newSelectorBuilder.selector.attrList.length > 0
+      || newSelectorBuilder.selector.pseudoClassList.length > 0
+      || newSelectorBuilder.selector.pseudoElement
+    ) {
+      throw newSelectorBuilder.errors.orderSettingElementsError;
+    }
+    newSelectorBuilder.selector.classList.push(value);
+    return newSelectorBuilder;
   },
 
-  pseudoElement(/* value */) {
-    throw new Error('Not implemented');
+  attr(value) {
+    const newSelectorBuilder = { ...this };
+    newSelectorBuilder.selector = JSON.parse(JSON.stringify(this.selector));
+    if (
+      newSelectorBuilder.selector.pseudoClassList.length > 0
+      || newSelectorBuilder.selector.pseudoElement
+    ) {
+      throw newSelectorBuilder.errors.orderSettingElementsError;
+    }
+    newSelectorBuilder.selector.attrList.push(value);
+    return newSelectorBuilder;
   },
 
-  combine(/* selector1, combinator, selector2 */) {
-    throw new Error('Not implemented');
+  pseudoClass(value) {
+    const newSelectorBuilder = { ...this };
+    newSelectorBuilder.selector = JSON.parse(JSON.stringify(this.selector));
+    if (newSelectorBuilder.selector.pseudoElement) {
+      throw newSelectorBuilder.errors.orderSettingElementsError;
+    }
+    newSelectorBuilder.selector.pseudoClassList.push(value);
+    return newSelectorBuilder;
+  },
+
+  pseudoElement(value) {
+    const newSelectorBuilder = { ...this };
+    newSelectorBuilder.selector = JSON.parse(JSON.stringify(this.selector));
+    const errorMessage = 'Element, id and pseudo-element should not occur more then one time inside the selector';
+    if (newSelectorBuilder.selector.pseudoElement) {
+      throw errorMessage;
+    }
+    newSelectorBuilder.selector.pseudoElement = value;
+    return newSelectorBuilder;
+  },
+
+  combine(selector1, combinator, selector2) {
+    const newSelectorBuilder = { ...this };
+    newSelectorBuilder.selector = JSON.parse(JSON.stringify(this.selector));
+    newSelectorBuilder.combinedSelectorStr = `${selector1.stringify()} ${combinator} ${selector2.stringify()}`;
+
+    return newSelectorBuilder;
+  },
+
+  stringify() {
+    if (this.combinedSelectorStr) {
+      const str = this.combinedSelectorStr;
+      this.combinedSelectorStr = '';
+      return str;
+    }
+    const { element, id, pseudoElement } = this.selector;
+    let strClasses = '';
+    let strAttr = '';
+    let strPseudoClasses = '';
+    const strID = id ? `#${id}` : '';
+    const strPseudoElement = pseudoElement ? `::${pseudoElement}` : '';
+    if (this.selector.classList.length > 0) {
+      strClasses = `.${this.selector.classList.join('.')}`;
+    }
+    if (this.selector.attrList.length > 0) {
+      strAttr = `[${this.selector.attrList.join('][')}]`;
+    }
+    if (this.selector.pseudoClassList.length > 0) {
+      strPseudoClasses = `:${this.selector.pseudoClassList.join(':')}`;
+    }
+    return `${element}${strID}${strClasses}${strAttr}${strPseudoClasses}${strPseudoElement}`;
   },
 };
 

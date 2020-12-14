@@ -342,61 +342,42 @@ function getDigitalRoot(num) {
  *   '{)' = false
  *   '{[(<{[]}>)]}' = true
  */
-function isBracketsBalanced(/* str */) {
-  // const difBrackets = {};
-  // const sameBrackets = {};
-  // const strArr = str.split('');
-  // let startIndex;
-  // let simpleBrackets = [];
-  // const bracketsConfig = [
-  //   ['[', ']'],
-  //   ['(', ')'],
-  //   ['{', '}'],
-  //   ['<', '>'],
-  // ];
+function isBracketsBalanced(str) {
+  const strArr = str.split('');
+  const bracketsConfig = [
+    ['[', ']'],
+    ['(', ')'],
+    ['{', '}'],
+    ['<', '>'],
+  ];
+  const startBrackets = bracketsConfig.map((val) => val[0]);
+  const endBrackets = bracketsConfig.map((val) => val[1]);
 
-  // // create configs different and same brackets
-  // bracketsConfig.forEach((val) => {
-  //   if (val[0] === val[1]) {
-  //     const temp = val[0];
-  //     sameBrackets[val[0]] = temp;
-  //   } else {
-  //     const temp = val[1];
-  //     difBrackets[val[1]] = temp;
-  //   }
-  // });
+  const stackOfOpenedBrackets = [];
+  let isClosed = true;
 
-  // // check simple brackets
-  // const checkSimpleBrackets = function ch(arr) {
-  //   if (arr.length === 0) return true;
-  //   if (arr.length === 1) return false;
-  //   for (let i = 0; i < arr.length; i += 1) {
-  //     if (sameBrackets[arr[i]] && arr[i] === arr[i + 1]) {
-  //       arr.splice(i, 2);
-  //       if (i === 0) i = -1;
-  //       else i -= 2;
-  //     }
-  //   }
-  //   if (arr.length === 0) return true;
-  //   return false;
-  // };
+  strArr.forEach((char) => {
+    const endBracketIndex = endBrackets.indexOf(char);
+    const startBracketIndex = startBrackets.indexOf(char);
+    if (endBracketIndex > -1) {
+      const lastIndex = stackOfOpenedBrackets.length - 1;
+      if (
+        lastIndex >= 0
+        && stackOfOpenedBrackets[lastIndex] === startBrackets[endBracketIndex]
+      ) {
+        stackOfOpenedBrackets.pop();
+      } else isClosed = false;
+    }
+    if (startBracketIndex > -1) {
+      stackOfOpenedBrackets.push(char);
+    }
+  });
 
-  // // check different brackets
-  // for (let i = 0; i < strArr.length; i += 1) {
-  //   if (difBrackets[strArr[i]]) {
-  //     startIndex = strArr.lastIndexOf(difBrackets[strArr[i]], i);
-  //     if (startIndex < 0) return false;
-  //     simpleBrackets = strArr
-  //       .splice(startIndex, i - startIndex + 1)
-  //       .slice(1, -1);
-  //     if (!checkSimpleBrackets(simpleBrackets)) return false;
-  //     i = startIndex - 1;
-  //   }
-  // }
+  if (isClosed) {
+    if (stackOfOpenedBrackets.length > 0) isClosed = false;
+  }
 
-  // if (checkSimpleBrackets(strArr)) return true;
-  // return false;
-  throw new Error('Not implemented');
+  return isClosed;
 }
 
 /**
@@ -452,10 +433,7 @@ function getCommonDirectoryPath(pathes) {
       const rev = out.split('').reverse();
       const index = rev.indexOf('/');
       if (index > -1) {
-        return rev
-          .slice(index, rev.length)
-          .reverse()
-          .join('');
+        return rev.slice(index, rev.length).reverse().join('');
       }
       return '';
     }
