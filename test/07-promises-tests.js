@@ -20,12 +20,12 @@ describe('07-promises-tasks', () => {
 
       const messages = [];
       const defaultRejectionMessage = new Error(
-        'Promise should be rejected with an Error!',
+        'Promise should be rejected with an Error!'
       );
 
       assert(
         answer1 instanceof Promise && answer2 instanceof Promise,
-        'willYouMarryMe should return Promise!',
+        'willYouMarryMe should return Promise!'
       );
 
       // answer 1
@@ -34,11 +34,12 @@ describe('07-promises-tasks', () => {
           assert.equal(
             value,
             'Hooray!!! She said "Yes"!',
-            'if parameter is "true" Promise should be resolved with value === \'Hooray!!! She said "Yes"!\'',
+            'if parameter is "true" Promise should be resolved with value === \'Hooray!!! She said "Yes"!\''
           );
         })
         .catch((error) => {
-          const errorMessage =            error instanceof Error ? error : defaultRejectionMessage;
+          const errorMessage =
+            error instanceof Error ? error : defaultRejectionMessage;
           messages.push(errorMessage.message);
 
           // answer 2
@@ -48,11 +49,12 @@ describe('07-promises-tasks', () => {
           assert.equal(
             value,
             'Oh no, she said "No".',
-            'if parameter is "false" Promise should be resolved with value === \'Oh no, she said "No".\'',
+            'if parameter is "false" Promise should be resolved with value === \'Oh no, she said "No".\''
           );
         })
         .catch((error) => {
-          const errorMessage =            error instanceof Error ? error : defaultRejectionMessage;
+          const errorMessage =
+            error instanceof Error ? error : defaultRejectionMessage;
           messages.push(errorMessage.message);
         })
         // answers
@@ -60,20 +62,22 @@ describe('07-promises-tasks', () => {
         .then(() => {
           assert(
             false,
-            "if parameter is not boolean Promise should be rejected with Error('Wrong parameter is passed! Ask her again.')",
+            "if parameter is not boolean Promise should be rejected with Error('Wrong parameter is passed! Ask her again.')"
           );
         })
         .catch((error) => {
-          const errorMessage =            error instanceof Error ? error : defaultRejectionMessage;
+          const errorMessage =
+            error instanceof Error ? error : defaultRejectionMessage;
 
           assert.equal(
             errorMessage.message,
             'Wrong parameter is passed! Ask her again.',
-            "if parameter is not boolean Promise should be rejected with Error('Wrong parameter is passed! Ask her again.')",
+            "if parameter is not boolean Promise should be rejected with Error('Wrong parameter is passed! Ask her again.')"
           );
         })
         .catch((error) => {
-          const errorMessage =            error instanceof Error ? error : defaultRejectionMessage;
+          const errorMessage =
+            error instanceof Error ? error : defaultRejectionMessage;
           messages.push(errorMessage.message);
         })
         .finally(() => {
@@ -84,7 +88,7 @@ describe('07-promises-tasks', () => {
           }
         });
     },
-    true,
+    true
   );
 
   it.optional(
@@ -92,12 +96,14 @@ describe('07-promises-tasks', () => {
     (done) => {
       const arrayForPromise = new Array(1000).fill(0).map((_, idx) => idx);
       const result1 = tasks.processAllPromises(
-        arrayForPromise.map((item) => Promise.resolve(item)),
+        arrayForPromise.map((item) => Promise.resolve(item))
       );
       const result2 = tasks.processAllPromises(
-        arrayForPromise.map((item) => (item % 2
+        arrayForPromise.map((item) =>
+          item % 2
             ? Promise.resolve(item)
-            : Promise.reject(Error(`Predictable Rejection ${item}`))),),
+            : Promise.reject(Error(`Predictable Rejection ${item}`))
+        )
       );
 
       const messages = [];
@@ -105,7 +111,7 @@ describe('07-promises-tasks', () => {
 
       assert(
         result1 instanceof Promise && result2 instanceof Promise,
-        'processAllPromises should return Promise!',
+        'processAllPromises should return Promise!'
       );
 
       // result 1
@@ -115,27 +121,30 @@ describe('07-promises-tasks', () => {
             assert.equal(
               item,
               arrayForPromise[idx],
-              "array's items shouldn't be Promises objects!",
+              "array's items shouldn't be Promises objects!"
             );
           });
         })
         .catch((error) => {
-          const errorMessage =            error instanceof Error ? error : defaultRejectionMessage;
+          const errorMessage =
+            error instanceof Error ? error : defaultRejectionMessage;
           messages.push(errorMessage.message);
           // result 2
         })
         .then(() => result2)
         .catch((error) => {
-          const errorMessage =            error instanceof Error ? error : defaultRejectionMessage;
+          const errorMessage =
+            error instanceof Error ? error : defaultRejectionMessage;
 
           assert.equal(
             errorMessage.message,
             'Predictable Rejection 0',
-            'should reject with Error was given from the first rejected Promise in array!',
+            'should reject with Error was given from the first rejected Promise in array!'
           );
         })
         .catch((error) => {
-          const errorMessage =            error instanceof Error ? error : defaultRejectionMessage;
+          const errorMessage =
+            error instanceof Error ? error : defaultRejectionMessage;
           messages.push(errorMessage.message);
         })
         .finally(() => {
@@ -146,7 +155,7 @@ describe('07-promises-tasks', () => {
           }
         });
     },
-    true,
+    true
   );
 
   it.optional(
@@ -157,8 +166,12 @@ describe('07-promises-tasks', () => {
         Promise.resolve("I'm first!"),
       ];
       const promises2 = [
-        new Promise((_, reject) => setTimeout(() => '', reject(Error("I'm not second!")), 200),),
-        new Promise((_, reject) => setTimeout(() => '', reject(Error("I'm not first!")), 500),),
+        new Promise((_, reject) =>
+          setTimeout(() => '', reject(Error("I'm not second!")), 200)
+        ),
+        new Promise((_, reject) =>
+          setTimeout(() => '', reject(Error("I'm not first!")), 500)
+        ),
       ];
 
       const result1 = tasks.getFastestPromise(promises1);
@@ -169,7 +182,7 @@ describe('07-promises-tasks', () => {
 
       assert(
         result1 instanceof Promise && result2 instanceof Promise,
-        'getFastestPromise should return Promise!',
+        'getFastestPromise should return Promise!'
       );
 
       // result 1
@@ -178,11 +191,12 @@ describe('07-promises-tasks', () => {
           assert.equal(
             value,
             "I'm first!",
-            'getFastestPromise should return Promise that was resolved first!',
+            'getFastestPromise should return Promise that was resolved first!'
           );
         })
         .catch((error) => {
-          const errorMessage =            error instanceof Error ? error : defaultRejectionMessage;
+          const errorMessage =
+            error instanceof Error ? error : defaultRejectionMessage;
           messages.push(errorMessage.message);
           // result 2
         })
@@ -190,19 +204,21 @@ describe('07-promises-tasks', () => {
         .then(() => {
           assert(
             false,
-            'should reject with Error was given from the first rejected Promise in array!',
+            'should reject with Error was given from the first rejected Promise in array!'
           );
         })
         .catch((error) => {
-          const errorMessage =            error instanceof Error ? error : defaultRejectionMessage;
+          const errorMessage =
+            error instanceof Error ? error : defaultRejectionMessage;
           assert.equal(
             errorMessage.message,
             "I'm not second!",
-            'should reject with Error was given from the first rejected Promise in array!',
+            'should reject with Error was given from the first rejected Promise in array!'
           );
         })
         .catch((error) => {
-          const errorMessage =            error instanceof Error ? error : defaultRejectionMessage;
+          const errorMessage =
+            error instanceof Error ? error : defaultRejectionMessage;
           messages.push(errorMessage.message);
         })
         .finally(() => {
@@ -213,13 +229,14 @@ describe('07-promises-tasks', () => {
           }
         });
     },
-    true,
+    true
   );
 
   it.optional(
     'function chainPromises should resolve Promises one by one',
     (done) => {
-      const lorem =        'Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium, totam rem aperiam, eaque ipsa quae ab illo inventore veritatis et quasi architecto beatae vitae dicta sunt explicabo. Nemo enim ipsam voluptatem quia voluptas sit aspernatur aut odit aut fugit, sed quia consequuntur magni dolores eos qui ratione voluptatem sequi nesciunt. Neque porro quisquam est, qui dolorem ipsum quia dolor sit amet, consectetur, adipisci velit, sed quia non numquam eius modi tempora incidunt ut labore et dolore magnam aliquam quaerat voluptatem. Ut enim ad minima veniam, quis nostrum exercitationem ullam corporis suscipit laboriosam, nisi ut aliquid ex ea commodi consequatur? Quis autem vel eum iure reprehenderit qui in ea voluptate velit esse quam nihil molestiae consequatur, vel illum qui dolorem eum fugiat quo voluptas nulla pariatur?Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium, totam rem aperiam, eaque ipsa quae ab illo inventore veritatis et quasi architecto beatae vitae dicta sunt explicabo. Nemo enim ipsam voluptatem quia voluptas sit aspernatur aut odit aut fugit, sed quia consequuntur magni dolores eos qui ratione voluptatem sequi nesciunt. Neque porro quisquam est, qui dolorem ipsum quia dolor sit amet, consectetur, adipisci velit, sed quia non numquam eius modi tempora incidunt ut labore et dolore magnam aliquam quaerat voluptatem. Ut enim ad minima veniam, quis nostrum exercitationem ullam corporis suscipit laboriosam, nisi ut aliquid ex ea commodi consequatur? Quis autem vel eum iure reprehenderit qui in ea voluptate velit esse quam nihil molestiae consequatur, vel illum qui dolorem eum fugiat quo voluptas nulla pariatur?';
+      const lorem =
+        'Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium, totam rem aperiam, eaque ipsa quae ab illo inventore veritatis et quasi architecto beatae vitae dicta sunt explicabo. Nemo enim ipsam voluptatem quia voluptas sit aspernatur aut odit aut fugit, sed quia consequuntur magni dolores eos qui ratione voluptatem sequi nesciunt. Neque porro quisquam est, qui dolorem ipsum quia dolor sit amet, consectetur, adipisci velit, sed quia non numquam eius modi tempora incidunt ut labore et dolore magnam aliquam quaerat voluptatem. Ut enim ad minima veniam, quis nostrum exercitationem ullam corporis suscipit laboriosam, nisi ut aliquid ex ea commodi consequatur? Quis autem vel eum iure reprehenderit qui in ea voluptate velit esse quam nihil molestiae consequatur, vel illum qui dolorem eum fugiat quo voluptas nulla pariatur?Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium, totam rem aperiam, eaque ipsa quae ab illo inventore veritatis et quasi architecto beatae vitae dicta sunt explicabo. Nemo enim ipsam voluptatem quia voluptas sit aspernatur aut odit aut fugit, sed quia consequuntur magni dolores eos qui ratione voluptatem sequi nesciunt. Neque porro quisquam est, qui dolorem ipsum quia dolor sit amet, consectetur, adipisci velit, sed quia non numquam eius modi tempora incidunt ut labore et dolore magnam aliquam quaerat voluptatem. Ut enim ad minima veniam, quis nostrum exercitationem ullam corporis suscipit laboriosam, nisi ut aliquid ex ea commodi consequatur? Quis autem vel eum iure reprehenderit qui in ea voluptate velit esse quam nihil molestiae consequatur, vel illum qui dolorem eum fugiat quo voluptas nulla pariatur?';
       const arrayForPromise = new Array(1000).fill(0).map((_, idx) => idx);
 
       const promises = lorem
@@ -235,10 +252,12 @@ describe('07-promises-tasks', () => {
           reject(Error('there are should not be any Unhandled Rejections!'));
         });
         result2 = tasks.chainPromises(
-          arrayForPromise.map((item) => (item % 2
+          arrayForPromise.map((item) =>
+            item % 2
               ? Promise.resolve(item)
-              : Promise.reject(Error(`Predictable Rejection ${item}`))),),
-          (a, b) => a - b,
+              : Promise.reject(Error(`Predictable Rejection ${item}`))
+          ),
+          (a, b) => a - b
         );
         result2.then(() => resolve());
       });
@@ -248,12 +267,12 @@ describe('07-promises-tasks', () => {
 
       assert(
         !/(Promise.all\s*\({0,})/.test(tasks.chainPromises.toString()),
-        'Function "chainPromises" should not use Promise.all method!',
+        'Function "chainPromises" should not use Promise.all method!'
       );
 
       assert(
         result1 instanceof Promise && result2 instanceof Promise,
-        'chainPromises should return Promise!',
+        'chainPromises should return Promise!'
       );
 
       // result 1
@@ -262,40 +281,44 @@ describe('07-promises-tasks', () => {
           assert.equal(
             value instanceof Promise,
             false,
-            "result value shouldn't be Promise object!",
+            "result value shouldn't be Promise object!"
           );
           assert.equal(
             Array.isArray(value),
             false,
-            "result value shouldn't be Array!",
+            "result value shouldn't be Array!"
           );
           assert.equal(
             value,
             lorem,
-            'result value should be equal value that could be calculated by reducing array with method action!',
+            `result value should be equal value that could be calculated by reducing array with method action! value = ${value}`
           );
         })
         .catch((error) => {
-          const errorMessage =            error instanceof Error ? error : defaultRejectionMessage;
+          const errorMessage =
+            error instanceof Error ? error : defaultRejectionMessage;
           messages.push(errorMessage.message);
           // result 2
         })
         .then(() => result2)
         .catch((error) => {
-          const errorMessage =            error instanceof Error ? error : defaultRejectionMessage;
+          const errorMessage =
+            error instanceof Error ? error : defaultRejectionMessage;
 
           assert(
             errorMessage.message.match('Predictable Rejection'),
-            'should not reject with Errors!',
+            'should not reject with Errors!'
           );
         })
         .catch((error) => {
-          const errorMessage =            error instanceof Error ? error : defaultRejectionMessage;
+          const errorMessage =
+            error instanceof Error ? error : defaultRejectionMessage;
           messages.push(errorMessage.message);
         })
         .then(() => unhandled)
         .catch((error) => {
-          const errorMessage =            error instanceof Error ? error : defaultRejectionMessage;
+          const errorMessage =
+            error instanceof Error ? error : defaultRejectionMessage;
           messages.push(errorMessage.message);
         })
         .finally(() => {
@@ -306,6 +329,6 @@ describe('07-promises-tasks', () => {
           }
         });
     },
-    true,
+    true
   );
 });
